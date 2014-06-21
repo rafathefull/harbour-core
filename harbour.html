@@ -41,14 +41,14 @@ cross platform CA-Cl*pper compatible compiler.
 <br />
 </div>
 <div class="itemtext">
-The Harbour web site is at &lt;URL:http://harbour-project.org/&gt;. If you
+The Harbour web site is at &lt;URL:https://harbour.github.io/&gt;. If you
 have any problems with this copy of Harbour please visit our web site
 and ensure that you are using the latest release.
 <br />
 </div>
 <div class="itemtext">
 If you have any questions about Harbour please be sure to read the
-FAQ &lt;URL:http://harbour-project.org/faq/&gt;. Also, please be sure to
+FAQ &lt;URL:https://harbour.github.io/faq/&gt;. Also, please be sure to
 read the documentation that comes with Harbour, you should find it in
 the same directory in which you found this file.
 <br />
@@ -8864,7 +8864,7 @@ test display.
 <br />
 </div>
 <div class="itemtext">
-Default is &quot;ΓûÆΓûÆΓûÆΓûÆΓûÆΓûÆΓûÆΓûÆΓûÆΓûÆΓûÆΓûÆΓûÆΓûÆ&quot;
+Default is &quot;▒▒▒▒▒▒▒▒▒▒▒▒▒▒&quot;
 <br />
 </div>
 <div class="itemtext">
@@ -8884,7 +8884,7 @@ Default is the IsColor() setting
 <br />
 </div>
 <div class="itemtext">
-Default is &quot;ΓûáΓûá&quot;
+Default is &quot;■■&quot;
 <br />
 </div>
 <div class="itemtitle">Returns</div>
@@ -8911,7 +8911,7 @@ SetBlink( .F. )       // Allow bright backgrounds
 // .... a typical application might have the following different settings
 //      normally these would be stored in a .dbf/.dbv
 aClrs := { ;
-   { &quot;Desktop&quot;,        &quot;N/BG&quot;,                          &quot;D&quot;, &quot;ΓûÆ&quot; }, ;
+   { &quot;Desktop&quot;,        &quot;N/BG&quot;,                          &quot;D&quot;, &quot;▒&quot; }, ;
    { &quot;Title&quot;,          &quot;N/W&quot;,                           &quot;T&quot;      }, ;
    { &quot;Top Menu&quot;,       &quot;N/BG,N/W,W+/BG,W+/N,GR+/N&quot;,     &quot;M&quot;      }, ;
    { &quot;Sub Menu&quot;,       &quot;W+/N*,GR+/N*,GR+/N*,W+/R,G+/R&quot;, &quot;M&quot;      }, ;
@@ -32122,10 +32122,10 @@ REQUEST HB_CODEPAGE_HU852
 PROCEDURE Main()
    hb_cdpSelect( &quot;EN&quot; )
    ? hb_cdpSelect()
-   ? hb_UTF8ToStr( &quot;├ë &lt; G is&quot; ), hb_BChar( 144 ) &lt; &quot;G&quot;  // ├ë &gt; G is .F.
+   ? hb_UTF8ToStr( &quot;É &lt; G is&quot; ), hb_BChar( 144 ) &lt; &quot;G&quot;  // É &gt; G is .F.
    hb_cdpSelect( &quot;HU852&quot; )
    ? hb_cdpSelect()
-   ? hb_UTF8ToStr( &quot;├ë &lt; G is&quot; ), hb_BChar( 144 ) &lt; &quot;G&quot;  // ├ë &gt; G is .T.
+   ? hb_UTF8ToStr( &quot;É &lt; G is&quot; ), hb_BChar( 144 ) &lt; &quot;G&quot;  // É &gt; G is .T.
    RETURN
 </pre>
 <div class="itemtitle">Status</div>
@@ -35039,7 +35039,7 @@ character expression passed as &lt;cCharacter&gt;.
 <div class="itemtitle">Example(s)</div>
 <pre class="examples">
 ? Asc( &quot;A&quot; )
-? Asc( &quot;─à&quot; )
+? Asc( &quot;ą&quot; )
 </pre>
 <div class="itemtitle">Status</div>
 <div class="itemtext">
