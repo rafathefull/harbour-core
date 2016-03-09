@@ -60,11 +60,13 @@ gpg --version | grep gpg
 # Dependencies for Windows builds
 
 # Bintray public key
-gpg -q --keyserver hkps://pgp.mit.edu --recv-keys 379CE192D401AB61
+gpg --keyserver hkps://pgp.mit.edu --recv-keys 379CE192D401AB61
+
+set -x
 
 # Builder public key
-curl -fsS -o pack.gpg 'https://bintray.com/user/downloadSubjectPublicKey?username=vszakats'
-gpg -q --import pack.gpg
+curl -fsS -O 'https://bintray.com/user/downloadSubjectPublicKey?username=vszakats' | \
+   gpg --import
 
 readonly base='https://bintray.com/artifact/download/vszakats/generic/'
 
