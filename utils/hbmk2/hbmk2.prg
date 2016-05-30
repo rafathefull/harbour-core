@@ -12773,7 +12773,7 @@ STATIC FUNCTION MacroProc( hbmk, cString, cFileName, cMacroPrefix )
       cStdOut := ""
       IF ! Empty( cMacro )
          hb_processRun( cMacro,, @cStdOut )
-         cStdOut := StrTran( StrTran( cStdOut, Chr( 13 ) ), Chr( 10 ), " " )
+         cStdOut := AllTrim( StrTran( StrTran( cStdOut, Chr( 13 ) ), Chr( 10 ), " " ) )
       ENDIF
       cString := Left( cString, nStart - 1 ) + cStdOut + SubStr( cString, nEnd + Len( _CMDSUBST_CLOSE ) )
    ENDDO
@@ -14534,26 +14534,15 @@ STATIC FUNCTION hbmk_TARGETTYPE( hbmk )
 STATIC FUNCTION hbmk_CPU( hbmk )
 
    DO CASE
-   CASE HBMK_ISPLAT( "dos|os2|cygwin" ) .OR. ;
-        HBMK_ISCOMP( "mingw|msvc|pocc|watcom|bcc|xcc" ) .OR. ;
+   CASE HBMK_ISPLAT( "dos|os2" ) .OR. ;
+        HBMK_ISCOMP( "mingw|msvc|pocc|watcom|bcc|tcc|xcc" ) .OR. ;
         ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "icc" )
       RETURN "x86"
-   CASE HBMK_ISCOMP( "gcc|icc|clang|sunpro|diab|pcc|tcc" )
-      /* TOFIX: This is not necessarily correct, since these inherit the
-                default CPU architecture from OS default, by and large,
-                and targets can be overridden using user options. */
-      RETURN "x86"
-   CASE hbmk[ _HBMK_cCOMP ] == "mingw64" .OR. ;
-        hbmk[ _HBMK_cCOMP ] == "msvc64" .OR. ;
-        hbmk[ _HBMK_cCOMP ] == "bcc64" .OR. ;
-        hbmk[ _HBMK_cCOMP ] == "pocc64"
+   CASE HBMK_ISCOMP( "mingw64|msvc64|bcc64|pocc64" )
       RETURN "x86_64"
-   CASE hbmk[ _HBMK_cCOMP ] == "msvcia64" .OR. ;
-        hbmk[ _HBMK_cCOMP ] == "iccia64"
+   CASE HBMK_ISCOMP( "msvcia64|iccia64" )
       RETURN "ia64"
-   CASE hbmk[ _HBMK_cCOMP ] == "mingwarm" .OR. ;
-        hbmk[ _HBMK_cCOMP ] == "msvcarm" .OR. ;
-        hbmk[ _HBMK_cCOMP ] == "poccarm"
+   CASE HBMK_ISCOMP( "mingwarm|msvcarm|poccarm" )
       RETURN "arm"
    CASE hbmk[ _HBMK_cCOMP ] == "msvcmips"
       RETURN "mips"
@@ -14561,7 +14550,12 @@ STATIC FUNCTION hbmk_CPU( hbmk )
       RETURN "sh"
    ENDCASE
 
-   RETURN ""
+   /* NOTE: Best effort to match the target CPU. This is not
+            necessarily correct, since these inherit the
+            default CPU architecture from OS/compiler default,
+            by and large, but target can be overridden using
+            user options. */
+   RETURN Lower( hb_Version( HB_VERSION_CPU ) )
 
 /* Return standard dynamic lib name suffix used by Harbour */
 STATIC FUNCTION hbmk_DYNSUFFIX( hbmk )
@@ -15681,7 +15675,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
    ENDIF
    hbmk[ _HBMK_cCOMP ] := hb_Version( HB_VERSION_BUILD_COMP )
    hbmk[ _HBMK_cPLAT ] := hb_Version( HB_VERSION_BUILD_PLAT )
-   hbmk[ _HBMK_cCPU ] := hb_Version( HB_VERSION_CPU )
+   hbmk[ _HBMK_cCPU ] := Lower( hb_Version( HB_VERSION_CPU ) )
    hbmk_harbour_dirlayout_init( hbmk )
 
    __hbshell_ext_static_init()
@@ -17551,7 +17545,7 @@ STATIC PROCEDURE __extra_initenv( hbmk, aArgs, cSelf )
    hbmk_harbour_dirlayout_detect( hbmk, .T. )
    hbmk[ _HBMK_cCOMP ] := hb_Version( HB_VERSION_BUILD_COMP )
    hbmk[ _HBMK_cPLAT ] := hb_Version( HB_VERSION_BUILD_PLAT )
-   hbmk[ _HBMK_cCPU ] := hb_Version( HB_VERSION_CPU )
+   hbmk[ _HBMK_cCPU ] := Lower( hb_Version( HB_VERSION_CPU ) )
    hbmk_harbour_dirlayout_init( hbmk )
 
    FOR EACH cArg IN aArgs DESCEND
