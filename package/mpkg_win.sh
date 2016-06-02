@@ -327,7 +327,15 @@ cd "${HB_RT}" || exit
    echo 'addons/*.txt'
 ) >> "${_ROOT}/_hbfiles"
 
-_pkgname="${_ROOT}/harbour-${HB_VF}-win.7z"
+_pkgdate=
+if [ "${_BRANCH#*lto*}" != "${_BRANCH}" ] ; then
+   case "$(uname)" in
+      *BSD|Darwin) _pkgdate="$(stat -f '-%Sm' -t '%Y%m%d-%H%M' "${HB_ABSROOT}README.md")";;
+      *)           _pkgdate="$(stat -c '%Y' "${HB_ABSROOT}README.md" | awk '{print "-" strftime("%Y%m%d-%H%M", $1)}')";;
+   esac
+fi
+
+_pkgname="${_ROOT}/harbour-${HB_VF}-win${_pkgdate}.7z"
 
 rm -f "${_pkgname}"
 (
