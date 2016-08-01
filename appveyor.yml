@@ -3,9 +3,11 @@ branches:
   only:
   - master
   - test-appveyor
-  - test-msysmingw
-  - lto
-  - lto-msysmingw
+  - test-mingwext
+  - test-mingwmsys
+  - prod
+  - prod-mingwext
+  - prod-mingwmsys
   - msvc2008
   - msvc2010
   - msvc2012
@@ -28,6 +30,10 @@ environment:
     secure: zKEcvmxcPuch0HUR9NuvXSXrMJL13qbQ0Ixh65VQUi0=
   PUSHOVER_TOKEN:
     secure: DjWTkh5sUw6dUQkHv3KhTvi2llF9GN17z60h9kRGYX4=
+  HB_CODESIGN_GPG_PASS:
+    secure: lOea8Uey+GRt36n5eNjICxD7AlzmxAgQ/V+/DG1yuD5jNJtSFPbfBQOei7VgZPXB
+  HB_CODESIGN_KEY_PASS:
+    secure: gI5Z9engdQmJel5UEuxRTsdRSvXSmixs5IGgMbTjxBxYYat+bCXE139J4Uz84F+D
 
 #init:
 #  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
@@ -36,8 +42,10 @@ environment:
 
 build_script:
   - set PATH=C:\msys64\usr\bin;%PATH%
-  - pacman --noconfirm --sync --refresh --sysupgrade
-  - pacman --noconfirm --sync --noprogressbar p7zip mc
+  - set HB_CI_THREADS=4
+  - set MSYS2_FC_CACHE_SKIP=yes
+  - pacman --noconfirm --noprogressbar -S -yu -u
+  - pacman --noconfirm --noprogressbar -S -yu -u
   - sh -c ./package/mpkg_win_ci.sh
 
 artifacts:

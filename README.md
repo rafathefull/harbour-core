@@ -1,15 +1,17 @@
 # Welcome to Harbour
-[![License](https://img.shields.io/badge/license-GPLv2%20%2B%20Library%20Exception-blue.svg)](LICENSE.txt)
-[![Tag](https://img.shields.io/github/tag/vszakats/harbour-core.svg)](https://github.com/vszakats/harbour-core/tree/v3.4.0dev)
-[![Commits](https://img.shields.io/github/commits-since/vszakats/harbour-core/v3.0.0.svg)](https://github.com/vszakats/harbour-core/commits/v3.4.0dev)<br />
+[![License](https://img.shields.io/badge/license-GPLv2%20%2B%20Library%20Exception-blue.svg)](LICENSE.txt "License")
+[![Download](https://img.shields.io/badge/download-daily_3.4.0dev-f8981D.svg)](https://github.com/vszakats/harbour-core/releases "Download daily release")
+[![PayPal Donate](https://img.shields.io/badge/PayPal-donate-f8981D.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=BPSZQYKXMQJYG "Donate")
+<br />
 [![Build Status](https://travis-ci.org/vszakats/harbour-core.svg?branch=master)](https://travis-ci.org/vszakats/harbour-core)
-[![Build status](https://ci.appveyor.com/api/projects/status/1kx6w3y6qasymah3/branch/master?svg=true)](https://ci.appveyor.com/project/vsz/harbour-core/branch/master)
+[![Build Status](https://ci.appveyor.com/api/projects/status/1kx6w3y6qasymah3/branch/master?svg=true)](https://ci.appveyor.com/project/vsz/harbour-core/branch/master)
 [![Coverity Status](https://scan.coverity.com/projects/3208/badge.svg)](https://scan.coverity.com/projects/3208)
-[![Download](https://img.shields.io/badge/download-daily-brightgreen.svg)](https://github.com/vszakats/harbour-core/releases)
+[![Average time to resolve an Issue](https://isitmaintained.com/badge/resolution/vszakats/harbour-core.svg)](https://isitmaintained.com/project/vszakats/harbour-core "Average time to resolve an Issue")
+[![Percentage of Issues still open](https://isitmaintained.com/badge/open/vszakats/harbour-core.svg)](https://isitmaintained.com/project/vszakats/harbour-core "Percentage of Issues still open")
 
 Harbour is the free software implementation of a multi-platform,
 multi-threading, object-oriented, scriptable programming language,
-backward compatible with xBase languages. Harbour consists of
+backwards compatible with xBase languages. Harbour consists of
 a compiler and runtime libraries with multiple UI and database
 backends, its own make system and a large collection of libraries
 and interfaces to popular APIs.
@@ -71,7 +73,7 @@ and interfaces to popular APIs.
 > :bulb: TIP:
 > [For](https://groups.google.com/forum/#!msg/harbour-users/2fwUzdKwpKA/32nI4WhZLfYJ)
 > [users](https://groups.google.com/forum/#!msg/harbour-users/Ro99f8S6my0/KvfjhCx_jE4J)
-> [contributing](CONTRIBUTING.md) to development, it's recommended to follow [commits](https://github.com/vszakats/harbour-core/commits/master) and reading
+> [contributing](.github/CONTRIBUTING.md) to development, it's recommended to follow [commits](https://github.com/vszakats/harbour-core/commits/master) and reading
 > [ChangeLog.txt](ChangeLog.txt?raw=true).
 
 ### Harbour live source repository
@@ -94,11 +96,11 @@ Download source archive from any of these URLs and unpack:
 
 ### Harbour unstable binaries (updated after each commit)
 
-#### Windows (mingw, 32-bit, 7-zip archive and installer combined)
+#### Windows (mingw, 32-bit, 7-zip archive)
 
-* <https://github.com/vszakats/harbour-core/releases/download/v3.4.0dev/harbour-daily-win.7z.exe>
+* <https://github.com/vszakats/harbour-core/releases/download/v3.4.0dev/harbour-daily-win.7z>
 
-#### OS X (using Homebrew :beer:)
+#### Mac (using Homebrew :beer:)
 
     brew install https://raw.githubusercontent.com/vszakats/harbour-core/master/package/harbour.rb --HEAD
 
@@ -217,7 +219,7 @@ To test it, type:
 
 You should see `Hello, world!` on screen.
 
-## on Darwin (OS X) hosts (possible cross-build targets: Windows, Windows CE, MS-DOS)
+## on Darwin (Mac) hosts (possible cross-build targets: Windows, Windows CE, MS-DOS)
 
 Platform specific prerequisite:
    Xcode or Command Line Tools for Xcode installed
@@ -372,13 +374,6 @@ You can fine-tune the build with these options:
 Then run build as usual with `clean install` options.
 See: [How to Build](#how-to-build)
 
-## Binary .7z.exe installer for Windows
-
-    $ package\mpkg_win.bat
-
-> Read in-file instructions and do the necessary
-> steps before calling the script.
-
 
 # How to Enable Optional Components
 
@@ -437,7 +432,7 @@ See contrib-specific dependencies and build notes in the projects'
 >    * don't put directory names inside double quotes
 >    * use absolute paths
 
-## Darwin (OS X)
+## Darwin (Mac)
 
 1. Install [Homebrew :beer:](http://brew.sh/)
 2. Install packages:
@@ -1155,7 +1150,7 @@ export HB_BUILD_3RDEXT=no
 make
 ```
 
-## on Darwin (OS X) hosts
+## on Darwin (Mac) hosts
 
 ```sh
 # To create "Universal" binaries, compatible with pre-Lion 32-bit Intel systems
@@ -1269,7 +1264,7 @@ Press `<Alt+D>` in the app.
 ## You can override target platform auto-detection with these `HB_PLATFORM` values:
 
 * linux    - Linux
-* darwin   - OS X
+* darwin   - macOS / iOS / tvOS
 * bsd      - FreeBSD / OpenBSD / NetBSD / DragonFly BSD / *BSD
 * beos     - BeOS / Haiku
 * hpux     - HP-UX
@@ -1497,8 +1492,8 @@ Supported shells per host platforms:
 * C/C++ Compilers/Shells:
 
      * MinGW/MinGW-64 [win, \*nix, free, open-source]
-        * <http://mingw-w64.org/>, <https://duckduckgo.com/?q=mingw-w64> (recommended, look for niXman builds)
-          * Dual-target (or _multilib_) for x86-64 and x86 hosts (select non-native target with `HB_CPU=x86` or `HB_CPU=x86_64`):
+        * <http://mingw-w64.org/>, <https://duckduckgo.com/?q=mingw-w64> (recommended, look for MSYS2 or niXman builds)
+          * Dual-target (aka _multilib_) for x86-64 and x86 hosts (select non-native target with `HB_CPU=x86` or `HB_CPU=x86_64`):
             * 32-bit hosted, posix, sjlj
             * 64-bit hosted, posix, sjlj
           * x86:
@@ -1560,17 +1555,6 @@ Supported shells per host platforms:
         * <http://www.watt-32.net/>
      * HB_WITH_ZLIB - zlib [multi-platform, free, open-source]
         * <http://zlib.net/>
-
-     * Windows 95 Winsock2 [win, free, closed-source]
-        * Information: Microsoft KB182108 "Availability of Windows Sockets 2.0 for Windows 95"
-        * Search for `w95ws2setup.exe`: <https://duckduckgo.com/?q=w95ws2setup.exe>
-            (required for Win95 support to run applications built with Harbour)
-     * Windows UNICOWS .dll [win, free, closed-source]
-        * <https://www.microsoft.com/en-us/download/details.aspx?id=4237>
-            (required for Win9x/ME support to run applications built with Harbour in UNICODE mode)
-     * Windows UNICOWS runtime/import library [win, free, open-source]
-        * <https://web.archive.org/http://libunicows.sourceforge.net/>
-            (required for Win9x/ME support at application built-time)
 
 * Tools:
 
@@ -1645,7 +1629,7 @@ Supported shells per host platforms:
 
      * [Netiquette Guidelines](https://tools.ietf.org/html/rfc1855)
      * [Setting Up Git](https://help.github.com/articles/set-up-git)
-     * [Git Book](https://git-scm.com/book) [free]
+     * [Pro Git](https://git-scm.com/book) [free book]
      * [GitHub Training Kit & Multi-language Cheat Sheet](https://training.github.com/kit/)
      * Using gettext (.po files)
        * <http://docs.transifex.com/formats/gettext>
@@ -1683,7 +1667,7 @@ Supported shells per host platforms:
 # Harbour Links
 
   * [Homepage](https://vszakats.github.io/harbour-core/)
-  * [How to contribute](CONTRIBUTING.md)
+  * [How to contribute](.github/CONTRIBUTING.md)
   * [Source code](https://github.com/vszakats/harbour-core)
   * [Issues](https://github.com/vszakats/harbour-core/issues)
   * [Localization](https://www.transifex.com/projects/p/harbour/) (Resource [hbmk2-vszakats](https://www.transifex.com/projects/p/harbour/resource/hbmk2-vszakats/))
@@ -1708,7 +1692,7 @@ Supported shells per host platforms:
    Harbour in any ways. For more legal details, see [LICENSE](LICENSE.txt).
 
    If you feel you can make Harbour better: contribute.
-   [See how](CONTRIBUTING.md).
+   [See how](.github/CONTRIBUTING.md).
 
    The information this document is subject to change without notice
    and does not represent any future commitment by the participants
@@ -1723,4 +1707,4 @@ Supported shells per host platforms:
 
 ---
 This document Copyright &copy;&nbsp;2009&ndash;2016 Viktor Szakáts (vszakats.net/harbour)<br />
-[![Creative Commons Attribution-ShareAlike 4.0](https://rawgit.com/cc-icons/cc-icons/master/fonts/cc-icons-svg/small.by-sa.svg)](https://creativecommons.org/licenses/by-sa/4.0/)
+[![Creative Commons Attribution-ShareAlike 4.0](https://cdn.rawgit.com/cc-icons/cc-icons/master/fonts/cc-icons-svg/small.by-sa.svg)](https://creativecommons.org/licenses/by-sa/4.0/)

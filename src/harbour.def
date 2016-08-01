@@ -839,6 +839,7 @@ HB_FUN_HB_MUTEXSUBSCRIBENOW
 HB_FUN_HB_MUTEXUNLOCK
 HB_FUN_HB_MVRESTORE
 HB_FUN_HB_MVSAVE
+HB_FUN_HB_NTOC
 HB_FUN_HB_NTOCOLOR
 HB_FUN_HB_NTOS
 HB_FUN_HB_NTOT
@@ -2769,6 +2770,7 @@ hb_itemPutNLLLen
 hb_itemPutNLLen
 hb_itemPutNLen
 hb_itemPutNS
+hb_itemPutNil
 hb_itemPutNumType
 hb_itemPutPtr
 hb_itemPutPtrGC

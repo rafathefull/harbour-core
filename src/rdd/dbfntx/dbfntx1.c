@@ -5078,7 +5078,7 @@ static LPNTXSORTINFO hb_ntxSortNew( LPTAGINFO pTag, HB_ULONG ulRecCount )
        * The memory necessary to index file is now ~
        *    ~ (keySize+4+sizeof(NTXSWAPPAGE)) * sqrt(ulRecCount) * 2
        * so the maximum is for DBF with 2^32 records and keySize 256 ~
-       * ~ 2^17 * 284 ~=~ 37 Mb
+       * ~ 2^17 * 284 ~=~ 37 MB
        * this is not a problem for current computers and I do not see
        * any way to use DBFs with four billions records and indexes with
        * such long (256 bytes) keys on the old ones - they will be simply
@@ -5099,7 +5099,7 @@ static LPNTXSORTINFO hb_ntxSortNew( LPTAGINFO pTag, HB_ULONG ulRecCount )
    pSort->ulMaxRec = ulRecCount;
    pSort->pKeyPool = pBuf;
    pSort->ulPages = ( ulRecCount + pSort->ulPgKeys - 1 ) / pSort->ulPgKeys;
-   /* check for overflow on 32 bit machines when number of records is nearly 2^32 */
+   /* check for overflow on 32-bit machines when number of records is nearly 2^32 */
    if( ! pSort->ulPages )
       pSort->ulPages = ulRecCount / pSort->ulPgKeys + 1;
    pSort->pSwapPage = ( LPNTXSWAPPAGE ) hb_xgrabz( sizeof( NTXSWAPPAGE ) * pSort->ulPages );
@@ -6753,40 +6753,22 @@ static HB_ERRCODE hb_ntxOrderInfo( NTXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
    switch( uiIndex )
    {
       case DBOI_STRICTREAD:
-         if( pInfo->itmResult )
-            hb_itemClear( pInfo->itmResult );
-         else
-            pInfo->itmResult = hb_itemNew( NULL );
+         pInfo->itmResult = hb_itemPutNil( pInfo->itmResult );
          return SELF_RDDINFO( SELF_RDDNODE( &pArea->dbfarea.area ), RDDI_STRICTREAD, 0, pInfo->itmResult );
       case DBOI_OPTIMIZE:
-         if( pInfo->itmResult )
-            hb_itemClear( pInfo->itmResult );
-         else
-            pInfo->itmResult = hb_itemNew( NULL );
+         pInfo->itmResult = hb_itemPutNil( pInfo->itmResult );
          return SELF_RDDINFO( SELF_RDDNODE( &pArea->dbfarea.area ), RDDI_OPTIMIZE, 0, pInfo->itmResult );
       case DBOI_AUTOOPEN:
-         if( pInfo->itmResult )
-            hb_itemClear( pInfo->itmResult );
-         else
-            pInfo->itmResult = hb_itemNew( NULL );
+         pInfo->itmResult = hb_itemPutNil( pInfo->itmResult );
          return SELF_RDDINFO( SELF_RDDNODE( &pArea->dbfarea.area ), RDDI_AUTOOPEN, 0, pInfo->itmResult );
       case DBOI_AUTOORDER:
-         if( pInfo->itmResult )
-            hb_itemClear( pInfo->itmResult );
-         else
-            pInfo->itmResult = hb_itemNew( NULL );
+         pInfo->itmResult = hb_itemPutNil( pInfo->itmResult );
          return SELF_RDDINFO( SELF_RDDNODE( &pArea->dbfarea.area ), RDDI_AUTOORDER, 0, pInfo->itmResult );
       case DBOI_AUTOSHARE:
-         if( pInfo->itmResult )
-            hb_itemClear( pInfo->itmResult );
-         else
-            pInfo->itmResult = hb_itemNew( NULL );
+         pInfo->itmResult = hb_itemPutNil( pInfo->itmResult );
          return SELF_RDDINFO( SELF_RDDNODE( &pArea->dbfarea.area ), RDDI_AUTOSHARE, 0, pInfo->itmResult );
       case DBOI_BAGEXT:
-         if( pInfo->itmResult )
-            hb_itemClear( pInfo->itmResult );
-         else
-            pInfo->itmResult = hb_itemNew( NULL );
+         pInfo->itmResult = hb_itemPutNil( pInfo->itmResult );
          return SELF_RDDINFO( SELF_RDDNODE( &pArea->dbfarea.area ), RDDI_ORDBAGEXT, 0, pInfo->itmResult );
       case DBOI_EVALSTEP:
          pInfo->itmResult = hb_itemPutNL( pInfo->itmResult,

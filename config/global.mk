@@ -126,10 +126,13 @@ ifeq ($(HB_INIT_DONE),)
       endif
       # 'clean' and 'install' are required when building a release package
       ifeq ($(filter clean,$(HB_MAKECMDGOALS)),)
-         export HB_BUILD_PKG := no
+         $(warning ! Warning: HB_BUILD_PKG=yes set, please make sure that a 'make clean' was done before the build.)
       else
       ifeq ($(filter install,$(HB_MAKECMDGOALS)),)
-         export HB_BUILD_PKG := no
+         # Let 'clean' be called without 'install'
+         ifeq ($(filter clean,$(HB_MAKECMDGOALS)),)
+            export HB_BUILD_PKG := no
+         endif
       else
       ifneq ($(ROOT),./)
          export HB_BUILD_PKG := no
@@ -160,7 +163,10 @@ ifeq ($(HB_INIT_DONE),)
       # 'install' is required to create import libraries
       ifeq ($(filter install,$(HB_MAKECMDGOALS)),)
          export HB_INSTALL_IMPLIB := no
-         $(warning ! Warning: HB_INSTALL_IMPLIB option has an effect only if 'install' is requested.)
+         # Stay silent on 'make clean'
+         ifeq ($(filter clean,$(HB_MAKECMDGOALS)),)
+            $(warning ! Warning: HB_INSTALL_IMPLIB option has an effect only if 'install' is requested.)
+         endif
       endif
    endif
 
@@ -900,6 +906,12 @@ ifeq ($(HB_COMPILER_VER),)
          HB_COMP_PATH_VER_DET := $(HB_CCPREFIX)clang$(HB_CCSUFFIX)
       endif
       _C_VER := $(shell "$(HB_COMP_PATH_VER_DET)" -v 2>&1)
+      ifneq ($(findstring 3.9,$(_C_VER)),)
+         HB_COMPILER_VER := 0309
+      else
+      ifneq ($(findstring 8.0,$(_C_VER)),)
+         HB_COMPILER_VER := 0309
+      else
       ifneq ($(findstring 7.3,$(_C_VER)),)
          HB_COMPILER_VER := 0308
       else
@@ -925,12 +937,20 @@ ifeq ($(HB_COMPILER_VER),)
       endif
       endif
       endif
+      endif
+      endif
    else
    ifneq ($(filter $(HB_COMPILER),gcc gccarm gccomf mingw mingw64 mingwarm djgpp),)
       ifeq ($(HB_COMP_PATH_VER_DET),)
          HB_COMP_PATH_VER_DET := $(HB_CCPREFIX)gcc$(HB_CCSUFFIX)
       endif
       _C_VER := $(shell "$(HB_COMP_PATH_VER_DET)" -v 2>&1)
+      ifneq ($(findstring version 6.1.,$(_C_VER)),)
+         HB_COMPILER_VER := 0601
+      else
+      ifneq ($(findstring version 5.4.,$(_C_VER)),)
+         HB_COMPILER_VER := 0504
+      else
       ifneq ($(findstring version 5.3.,$(_C_VER)),)
          HB_COMPILER_VER := 0503
       else
@@ -962,6 +982,8 @@ ifeq ($(HB_COMPILER_VER),)
          HB_COMPILER_VER := 0403
       else
          HB_COMPILER_VER := 0304
+      endif
+      endif
       endif
       endif
       endif
@@ -1521,14 +1543,8 @@ ifeq ($(HB_HOST_PKGM),)
    ifeq ($(HB_PLATFORM),sunos)
       HB_HOST_PKGM += pkg
    else
-   ifeq ($(HB_PLATFORM),win)
-      ifneq ($(wildcard /etc/pacman.conf),)
-         HB_HOST_PKGM += pacman
-      endif
-   else
    ifeq ($(HB_PLATFORM),cygwin)
       HB_HOST_PKGM += cygwin
-   endif
    endif
    endif
    endif

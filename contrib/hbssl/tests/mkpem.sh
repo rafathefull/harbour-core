@@ -5,18 +5,31 @@
 
 # Generate RSA keypair with encrypted private key
 # Requires: OpenSSL 1.x or upper
-#           (install with `brew install openssl` on OS X)
+#           (install with `brew install openssl` on Mac)
 
 case "$(uname)" in
-   *Darwin*) alias openssl=/usr/local/opt/openssl/bin/openssl;;
+   *Darwin*)
+      openssl() {
+         /usr/local/opt/openssl/bin/openssl "$@"
+      };;
 esac
+
+privout() {
+   o="$1"; rm -f "$o"; touch "$o"; chmod 0600 "$o"; shift; "$@" >> "$o"
+}
 
 pass='pass:test'
 
-# Generate
-openssl genpkey -algorithm RSA -out privkey.pem -aes-256-cbc -pass "${pass}" -pkeyopt rsa_keygen_bits:2048
-openssl rsa -passin "${pass}" -in privkey.pem -pubout > pubkey.pem
+# Private
+privout 'privkey.pem' \
+openssl genpkey -algorithm RSA -aes-256-cbc -pkeyopt rsa_keygen_bits:2048 -pass "${pass}"
+# human-readable
+privout 'privkey.pem.rsa.txt' \
+openssl rsa -passin "${pass}" -in 'privkey.pem' -text -noout
+privout 'privkey.pem.asn.txt' \
+openssl asn1parse             -in 'privkey.pem'
 
-# Generate human-readable
-openssl rsa -passin "${pass}" -in privkey.pem -noout -text > privkey.pem.txt
-openssl rsa -passin "${pass}" -in pubkey.pem  -noout -text -pubin > pubkey.pem.txt
+# Public
+openssl rsa -passin "${pass}" -in 'privkey.pem' -pubout > pubkey.pem
+# human-readable
+openssl rsa -passin "${pass}" -in 'pubkey.pem'  -text -noout -pubin > pubkey.pem.txt

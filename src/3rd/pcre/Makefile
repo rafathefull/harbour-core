@@ -2,6 +2,8 @@ ROOT := ../../../
 
 include $(TOP)$(ROOT)config/global.mk
 
+LIBNAME := hbpcre
+
 HB_BUILD_WARN := no
 HB_BUILD_MODE := c
 
@@ -26,8 +28,6 @@ C_SOURCES := \
    pcrever.c \
    pcrevutf.c \
    pcrexcls.c \
-
-LIBNAME := hbpcre
 
 ifneq ($(HB_HAS_PCRE_LOCAL),)
 
@@ -70,7 +70,7 @@ else
 endif
 
 # ORIGIN http://pcre.org/
-# URL    https://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.38.tar.bz2
+# URL    https://ftp.csx.cam.ac.uk/pub/software/programming/pcre/pcre-8.39.tar.bz2
 # DIFF   pcre.dif
 #
 # MAP    LICENCE                           LICENSE.txt

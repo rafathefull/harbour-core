@@ -57,6 +57,7 @@
 *.exe     binary
 *.frm     binary
 *.gif     binary
+*.gpg     binary
 *.icns    binary
 *.ico     binary
 *.jpg     binary

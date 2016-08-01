@@ -19,10 +19,9 @@ class Harbour < Formula
 
   head "https://github.com/vszakats/harbour-core.git"
 
-  # This one is "vendored", but is used if found on the system
+  # This one is "vendored", but it is used when found on the system
   depends_on "pcre"
 
-  depends_on "allegro" => :optional
   depends_on "cairo" => :optional
   depends_on "freeimage" => :optional
   depends_on "gd" => :optional

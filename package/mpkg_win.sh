@@ -127,11 +127,42 @@ done
 # binutils 2.25, when the PE build timestamp field is often
 # filled with random bytes instead of zeroes. -s option is not
 # fixing this, 'strip' randomly fails either, so we're
-# patching manually. Do this while only Harbour built binaries are
-# present in the bin directory to not modify 3rd party binaries.
+# patching manually.
 cp -f -p "${HB_ABSROOT}bin/hbmk2.exe" "${HB_ABSROOT}bin/hbmk2-temp.exe"
-"${HB_ABSROOT}bin/hbmk2-temp.exe" "${_SCRIPT}" pe "${_ROOT}" "${HB_ABSROOT}bin/*.exe"
-"${HB_ABSROOT}bin/hbmk2-temp.exe" "${_SCRIPT}" pe "${_ROOT}" "${HB_ABSROOT}bin/*.dll"
+# NOTE: do not forget to update the list of binary names created
+#       by the GNU Make process, in case it changes.
+for name in \
+   'harbour*.dll' \
+   'harbour.exe' \
+   'hbi18n.exe' \
+   'hbmk2.exe' \
+   'hbpp.exe' \
+   'hbspeed.exe' \
+   'hbtest.exe' ; do
+   for file in ${HB_ABSROOT}bin/${name} ; do
+
+      # Remove code signature first
+      if [ -f "${HB_CODESIGN_KEY}" ] ; then
+         # 'strip' would also work, but this is cleaner
+         osslsigncode remove-signature -in "${file}" -out "${file}-unsigned"
+         mv -f "${file}-unsigned" "${file}"
+      fi
+
+      # Remove embedded timestamps
+      "${HB_ABSROOT}bin/hbmk2-temp.exe" "${_SCRIPT}" pe "${_ROOT}" "${file}"
+
+      # Readd code signature
+      if [ -f "${HB_CODESIGN_KEY}" ] ; then
+         (
+            set +x
+            osslsigncode sign -h sha256 -in "${file}" -out "${file}-signed" \
+               -pkcs12 "${HB_CODESIGN_KEY}" -pass "${HB_CODESIGN_KEY_PASS}" \
+               -ts 'http://timestamp.digicert.com'
+            mv -f "${file}-signed" "${file}"
+         )
+      fi
+   done
+done
 rm -f "${HB_ABSROOT}bin/hbmk2-temp.exe"
 
 # Workaround for ld --no-insert-timestamp issue in that it
@@ -219,7 +250,7 @@ fi
    cp -f -p --parents $(find 'src/3rd' -name '*.h') "${HB_ABSROOT}"
 )
 
-# TODO: This whole section should only be relevant
+# NOTE: This whole section should only be relevant
 #       if the distro is MinGW based. Much of it is
 #       useful only if MinGW _is_ actually bundled
 #       with the package, which is probably something
@@ -272,7 +303,7 @@ touch -c "${HB_ABSROOT}RELNOTES.txt" -r "${HB_ABSROOT}README.md"
 # Create tag update JSON request
 # https://developer.github.com/v3/git/refs/#update-a-reference
 
-echo "{\"sha\":\"$(git rev-parse --verify HEAD)\",\"force\":true}" > "${_ROOT}/git_tag_patch.json"
+echo "{\"sha\":\"$(git rev-parse --verify HEAD)\",\"force\":true}" > "${_ROOT}/git_tag_commit.json"
 
 # Register build information
 
@@ -303,7 +334,7 @@ fi
 # Reset Windows attributes
 
 case "$(uname)" in
-   *_NT*) find "$(echo "${HB_ABSROOT}" | sed 's|/$||g')" -exec attrib +A -R {} \;
+   *_NT*) find "${HB_ABSROOT%/}" -exec attrib +A -R {} \;
 esac
 
 # Create installer/archive
@@ -328,7 +359,7 @@ cd "${HB_RT}" || exit
 ) >> "${_ROOT}/_hbfiles"
 
 _pkgdate=
-if [ "${_BRANCH#*lto*}" != "${_BRANCH}" ] ; then
+if [ "${_BRANCH#*prod*}" != "${_BRANCH}" ] ; then
    case "$(uname)" in
       *BSD|Darwin) _pkgdate="$(stat -f '-%Sm' -t '%Y%m%d-%H%M' "${HB_ABSROOT}README.md")";;
       *)           _pkgdate="$(stat -c '%Y' "${HB_ABSROOT}README.md" | awk '{print "-" strftime("%Y%m%d-%H%M", $1)}')";;
@@ -389,12 +420,12 @@ openssl dgst -sha256 "${_pkgname}"
 
 cd - || exit
 
-if [ "${_BRANCH#*lto*}" != "${_BRANCH}" ] && \
-   [ -n "${PUSHOVER_USER}" ] && \
-   [ -n "${PUSHOVER_TOKEN}" ] ; then
-   (
+(
+   set +x
+   if [ "${_BRANCH#*prod*}" != "${_BRANCH}" ] && \
+      [ -n "${PUSHOVER_USER}" ] && \
+      [ -n "${PUSHOVER_TOKEN}" ] ; then
       # https://pushover.net/api
-      set +x
       curl -sS \
          --form-string "user=${PUSHOVER_USER}" \
          --form-string "token=${PUSHOVER_TOKEN}" \
@@ -405,35 +436,29 @@ if [ "${_BRANCH#*lto*}" != "${_BRANCH}" ] && \
          https://api.pushover.net/1/messages.json
       echo
       echo "! Push notification: Build ready."
-   )
-fi
+   fi
 
-if [ "${_BRANCH#*master*}" != "${_BRANCH}" ] && \
-   [ -n "${GITHUB_TOKEN}" ] ; then
-   (
-      set +x
+   if [ "${_BRANCH#*master*}" != "${_BRANCH}" ] && \
+      [ -n "${GITHUB_TOKEN}" ] ; then
       curl -sS \
          -H "Authorization: token ${GITHUB_TOKEN}" \
          -X PATCH "https://api.github.com/repos/vszakats/harbour-core/git/refs/tags/v${HB_VF_DEF}" \
-         -d "@${_ROOT}/git_tag_patch.json"
-   )
-fi
+         -d "@${_ROOT}/git_tag_commit.json"
+   fi
 
-if [ -n "${VIRUSTOTAL_APIKEY}" ] ; then
-
-   # https://www.virustotal.com/en/documentation/public-api/#scanning-files
-   if [ "$(wc -c < "${_pkgname}")" -lt 32000000 ] ; then
-      (
-         set +x
+   if [ -n "${VIRUSTOTAL_APIKEY}" ] ; then
+      # https://www.virustotal.com/en/documentation/public-api/#scanning-files
+      if [ "$(wc -c < "${_pkgname}")" -lt 32000000 ] ; then
          out="$(curl -sS \
             -X POST https://www.virustotal.com/vtapi/v2/file/scan \
             --form-string "apikey=${VIRUSTOTAL_APIKEY}" \
             --form "file=@${_pkgname}")"
          echo "${out}"
          echo "VirusTotal URL for '${_pkgname}':"
+         # echo "${out}" | jq '.permalink'
          echo "${out}" | grep -o 'https://[a-zA-Z0-9./]*'
-      )
-   else
-      echo "! File too large for VirusTotal Public API. Upload skipped."
+      else
+         echo "! File too large for VirusTotal Public API. Upload skipped."
+      fi
    fi
-fi
+)

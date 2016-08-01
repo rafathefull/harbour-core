@@ -545,9 +545,9 @@ extern void *     hb_xRefResize( void * pMem, HB_SIZE nSave, HB_SIZE nSize, HB_S
 #define hb_xreallocz( p, n )  memset( hb_xrealloc( ( p ), ( n ) ), 0, ( n ) )
 
 /* #if UINT_MAX == ULONG_MAX */
-/* it fails on 64bit platforms where int has 32 bit and long has 64 bit.
+/* it fails on 64-bit platforms where int has 32 bits and long has 64 bits.
    we need these functions only when max(size_t) < max(long)
-   and only on 16bit platforms, so the below condition seems to be
+   and only on 16-bit platforms, so the below condition seems to be
    more reasonable. */
 #if UINT_MAX > USHRT_MAX
    /* NOTE: memcpy/memset can work with HB_SIZE data blocks */
@@ -996,6 +996,7 @@ extern HB_EXPORT double    hb_strVal( const char * szText, HB_SIZE nLen ); /* re
 extern HB_EXPORT HB_MAXINT hb_strValInt( const char * szText, int * iOverflow );
 extern HB_EXPORT char *    hb_strRemEscSeq( char * szText, HB_SIZE * nLen ); /* remove C ESC sequences and converts them to Clipper chars */
 extern HB_EXPORT char *    hb_numToStr( char * szBuf, HB_SIZE nSize, HB_MAXINT nNumber );
+extern HB_EXPORT char *    hb_dblToStr( char * szBuf, HB_SIZE nSize, double dNumber, int iMaxDec );
 extern HB_EXPORT double    hb_numRound( double dResult, int iDec ); /* round a number to a specific number of digits */
 extern HB_EXPORT double    hb_numInt( double dNum ); /* take the integer part of the number */
 extern HB_EXPORT void      hb_random_seed( HB_I32 seed );

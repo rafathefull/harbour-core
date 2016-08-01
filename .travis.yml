@@ -27,10 +27,9 @@ addons:
       - ubuntu-toolchain-r-test
     packages:
       - clang-3.8
-      - gcc-5
-      - g++-5
+      - gcc-6
+      - g++-6
       - firebird2.5-dev
-     #- liballegro4.2-dev
      #- libcairo2-dev
       - libcups2-dev
       - libcurl4-openssl-dev
@@ -49,6 +48,7 @@ addons:
       - gcc-mingw-w64
       - wine
       - p7zip-full
+      - osslsigncode
 before_install:
   - if [ "$TRAVIS_OS_NAME" = "osx" ] ; then
        brew update > /dev/null;
@@ -87,11 +87,11 @@ script:
     else
        if [ "$TRAVIS_OS_NAME" = "linux" ] ; then
           if [ "$CC" = "gcc" ] ; then
-             export HB_CCSUFFIX=-5;
+             export HB_CCSUFFIX=-6;
           else
              export HB_CCSUFFIX=-3.8;
           fi;
-          export HB_USER_CFLAGS='-fstack-protector-strong';
+          export HB_USER_CFLAGS="${HB_USER_CFLAGS} -fstack-protector-strong";
        fi;
        export HB_USER_CFLAGS="${HB_USER_CFLAGS} -D_FORTIFY_SOURCE=2";
        ls -lA /usr/bin/$CC*;

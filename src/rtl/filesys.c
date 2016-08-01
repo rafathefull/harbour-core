@@ -390,20 +390,18 @@ static void fs_win_set_drive( int iDrive )
 
 static HANDLE DosToWinHandle( HB_FHANDLE fHandle )
 {
-   if( fHandle == ( HB_FHANDLE ) FS_ERROR )
-      return NULL;
-
-   else if( fHandle == ( HB_FHANDLE ) HB_STDIN_HANDLE )
-      return GetStdHandle( STD_INPUT_HANDLE );
-
-   else if( fHandle == ( HB_FHANDLE ) HB_STDOUT_HANDLE )
-      return GetStdHandle( STD_OUTPUT_HANDLE );
-
-   else if( fHandle == ( HB_FHANDLE ) HB_STDERR_HANDLE )
-      return GetStdHandle( STD_ERROR_HANDLE );
-
-   else
-      return ( HANDLE ) fHandle;
+   switch( fHandle )
+   {
+      case ( HB_FHANDLE ) FS_ERROR:
+         return NULL;
+      case ( HB_FHANDLE ) HB_STDIN_HANDLE:
+         return GetStdHandle( STD_INPUT_HANDLE );
+      case ( HB_FHANDLE ) HB_STDOUT_HANDLE:
+         return GetStdHandle( STD_OUTPUT_HANDLE );
+      case ( HB_FHANDLE ) HB_STDERR_HANDLE:
+         return GetStdHandle( STD_ERROR_HANDLE );
+   }
+   return ( HANDLE ) fHandle;
 }
 
 static void convert_open_flags( HB_BOOL fCreate, HB_FATTR nAttr, HB_USHORT uiFlags,
@@ -3391,7 +3389,7 @@ HB_ULONG hb_fsSeek( HB_FHANDLE hFileHandle, HB_LONG lOffset, HB_USHORT uiFlags )
 
    hb_vmUnlock();
 #if defined( HB_OS_WIN )
-   /* This DOS hack creates 2GB file size limit, Druzus */
+   /* This DOS hack creates 2 GiB file size limit, Druzus */
    if( lOffset < 0 && nFlags == SEEK_SET )
    {
       ulPos = ( ULONG ) INVALID_SET_FILE_POINTER;
@@ -3413,7 +3411,7 @@ HB_ULONG hb_fsSeek( HB_FHANDLE hFileHandle, HB_LONG lOffset, HB_USHORT uiFlags )
    {
       APIRET ret;
 
-      /* This DOS hack creates 2GB file size limit, Druzus */
+      /* This DOS hack creates 2 GiB file size limit, Druzus */
       if( lOffset < 0 && nFlags == SEEK_SET )
          ret = 25; /* 'Seek Error' */
       else
@@ -3427,7 +3425,7 @@ HB_ULONG hb_fsSeek( HB_FHANDLE hFileHandle, HB_LONG lOffset, HB_USHORT uiFlags )
       }
    }
 #else
-   /* This DOS hack creates 2GB file size limit, Druzus */
+   /* This DOS hack creates 2 GiB file size limit, Druzus */
    if( lOffset < 0 && nFlags == SEEK_SET )
    {
       ulPos = ( HB_ULONG ) -1;
@@ -3441,7 +3439,7 @@ HB_ULONG hb_fsSeek( HB_FHANDLE hFileHandle, HB_LONG lOffset, HB_USHORT uiFlags )
       /* small trick to resolve problem with position reported for directories */
       if( ulPos == LONG_MAX && lOffset == 0 && nFlags == SEEK_END )
       {
-         /* we do not need to use fstat64() here on 32 bit platforms, [druzus] */
+         /* we do not need to use fstat64() here on 32-bit platforms, [druzus] */
          struct stat st;
 
          if( fstat( hFileHandle, &st ) == 0 )

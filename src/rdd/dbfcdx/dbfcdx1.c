@@ -7997,45 +7997,27 @@ static HB_ERRCODE hb_cdxOrderInfo( CDXAREAP pArea, HB_USHORT uiIndex, LPDBORDERI
    switch( uiIndex )
    {
       case DBOI_STRICTREAD:
-         if( pInfo->itmResult )
-            hb_itemClear( pInfo->itmResult );
-         else
-            pInfo->itmResult = hb_itemNew( NULL );
+         pInfo->itmResult = hb_itemPutNil( pInfo->itmResult );
          return SELF_RDDINFO( SELF_RDDNODE( &pArea->dbfarea.area ), RDDI_STRICTREAD, 0, pInfo->itmResult );
 
       case DBOI_OPTIMIZE:
-         if( pInfo->itmResult )
-            hb_itemClear( pInfo->itmResult );
-         else
-            pInfo->itmResult = hb_itemNew( NULL );
+         pInfo->itmResult = hb_itemPutNil( pInfo->itmResult );
          return SELF_RDDINFO( SELF_RDDNODE( &pArea->dbfarea.area ), RDDI_OPTIMIZE, 0, pInfo->itmResult );
 
       case DBOI_AUTOOPEN:
-         if( pInfo->itmResult )
-            hb_itemClear( pInfo->itmResult );
-         else
-            pInfo->itmResult = hb_itemNew( NULL );
+         pInfo->itmResult = hb_itemPutNil( pInfo->itmResult );
          return SELF_RDDINFO( SELF_RDDNODE( &pArea->dbfarea.area ), RDDI_AUTOOPEN, 0, pInfo->itmResult );
 
       case DBOI_AUTOORDER:
-         if( pInfo->itmResult )
-            hb_itemClear( pInfo->itmResult );
-         else
-            pInfo->itmResult = hb_itemNew( NULL );
+         pInfo->itmResult = hb_itemPutNil( pInfo->itmResult );
          return SELF_RDDINFO( SELF_RDDNODE( &pArea->dbfarea.area ), RDDI_AUTOORDER, 0, pInfo->itmResult );
 
       case DBOI_AUTOSHARE:
-         if( pInfo->itmResult )
-            hb_itemClear( pInfo->itmResult );
-         else
-            pInfo->itmResult = hb_itemNew( NULL );
+         pInfo->itmResult = hb_itemPutNil( pInfo->itmResult );
          return SELF_RDDINFO( SELF_RDDNODE( &pArea->dbfarea.area ), RDDI_AUTOSHARE, 0, pInfo->itmResult );
 
       case DBOI_BAGEXT:
-         if( pInfo->itmResult )
-            hb_itemClear( pInfo->itmResult );
-         else
-            pInfo->itmResult = hb_itemNew( NULL );
+         pInfo->itmResult = hb_itemPutNil( pInfo->itmResult );
          return SELF_RDDINFO( SELF_RDDNODE( &pArea->dbfarea.area ), RDDI_ORDBAGEXT, 0, pInfo->itmResult );
 
       case DBOI_EVALSTEP:
@@ -9394,7 +9376,7 @@ static LPCDXSORTINFO hb_cdxSortNew( LPCDXTAG pTag, HB_ULONG ulRecCount )
        * The memory necessary to index file is now ~
        *    ~ (keySize+4+sizeof(CDXSWAPPAGE)) * sqrt(ulRecCount) * 2
        * so the maximum is for DBF with 2^32 records and keySize 240 ~
-       * ~ 2^17 * 268 ~=~ 35 Mb
+       * ~ 2^17 * 268 ~=~ 35 MB
        * this is not a problem for current computers and I do not see
        * any way to use DBFs with four billions records and indexes with
        * such long (240 bytes) keys on the old ones - they will be simply

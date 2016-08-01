@@ -14,6 +14,13 @@
 -harden
 {HB_BUILD_PKG='yes'}-vcsts
 
+../package/harbour.hbc{hbdyn}
+
+# code signing
+"{win&HB_CODESIGN_KEY_PASS}-sign=${HB_CODESIGN_KEY}"
+"{win&HB_CODESIGN_KEY_PASS}-signpw=${HB_CODESIGN_KEY_PASS}"
+"{win&HB_CODESIGN_KEY_PASS}-signflag=-h sha256"
+
 # disable .hbx updates unless requested
 {!(HB_REBUILD_EXTERN='yes')}-hbx-
 
@@ -25,7 +32,6 @@
 #{win&allmingw&HB_COMP_VER>'0401'}-cflag=-Wstrict-overflow=4
 
 {allwin}-winuni
-{allwin&HB_LIB3RD}-lunicows
 
 {HB_BUILD_DEBUG}-prgflag=-l-
 {HB_BUILD_DEBUG}-debug
